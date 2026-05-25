@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0f1117;
+  --bg-secondary: #161b27;
+  --bg-card: #1a2035;
+  --bg-hover: #1e2640;
+  --border: #2a3350;
+  --border-light: #334066;
+  --text-primary: #e8edf5;
+  --text-secondary: #8b96b0;
+  --text-muted: #4a5568;
+  --accent-red: #e53e3e;
+  --accent-red-soft: #feb2b2;
+  --accent-blue: #4299e1;
+  --accent-green: #48bb78;
+  --accent-yellow: #ed8936;
+}
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), 'Segoe UI', system-ui, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+/* Smooth page fade in */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.fade-up-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.fade-up-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.fade-up-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
