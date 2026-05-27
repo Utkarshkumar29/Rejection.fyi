@@ -14,7 +14,10 @@ require("dotenv").config();
 app.use(express.json())
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    process.env.CLIENT_URL
+  ],
   credentials: true
 }))
 
@@ -32,10 +35,13 @@ const server=app.listen(5000, () => {
   console.log("Server running at port 5000");
 });
 
-const io=new Server(server,{
-  cors:{
-    origin:process.env.CLIENT_URL,
-    methods:["GET","POST"]
+const io = new Server(server, {
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      process.env.CLIENT_URL
+    ],
+    methods: ["GET", "POST"]
   }
 })
 
