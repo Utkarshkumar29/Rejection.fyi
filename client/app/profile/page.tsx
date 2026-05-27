@@ -34,7 +34,7 @@ export default function ProfilePage() {
 
         Promise.all([
             fetchApi("/user/me", { method: "GET" }),
-            fetchApi("/rejections/mine", { method: "GET" })
+            fetchApi("rejections/mine", { method: "GET" })
         ]).then(([meRes, rejectionsRes]) => {
             setUser(meRes.user)
             setRejections(rejectionsRes.rejections || [])

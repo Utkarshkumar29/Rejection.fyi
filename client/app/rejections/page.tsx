@@ -76,9 +76,10 @@ const FeedPage = () => {
         try {
             const params = new URLSearchParams({ page: String(p), limit: '15' })
             if (filterStage) params.set('stage', filterStage)
-            const data = await fetchApi(`/rejections?${params}`)
-            setRejections(data.data?.rejections || [])
-            setTotalPages(data.data?.totalPages || 1)
+            const data = await fetchApi(`rejections?${params}`)
+            const payload = data.data || data   // unwrap if wrapped, use directly if not
+            setRejections(payload?.rejections || [])
+            setTotalPages(payload?.totalPages || 1)
         } catch (e) {
             console.error(e)
         } finally {
@@ -92,10 +93,10 @@ const FeedPage = () => {
 
     // SSE live feed
     useEffect(() => {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
+        const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace('api', '') || 'http://localhost:5000'
         let es: EventSource
         try {
-            es = new EventSource(`${apiBase}/api/rejections/stream`)
+            es = new EventSource(`${apiBase}api/rejections/stream`)
             es.onmessage = (e) => {
                 const newItem = JSON.parse(e.data)
                 if (newItem?._id) {
@@ -113,7 +114,7 @@ const FeedPage = () => {
         setSubmitError("")
         try {
             const anonToken = typeof window !== 'undefined' ? localStorage.getItem("anonToken") : null
-            await fetchApi("/rejections", {
+            await fetchApi("rejections", {
                 method: "POST",
                 body: JSON.stringify({
                     ...form,

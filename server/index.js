@@ -8,9 +8,15 @@ const rejectionsRoutes=require('./routes/rejectionRoutes');
 const { Server } = require("socket.io");
 const setupSocket = require('./config/socket')
 const companyRoutes=require("./routes/companyRoutes")
+const cors = require("cors");
 
 require("dotenv").config();
 app.use(express.json())
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
 
 app.use("/api/user/",userRoutes)
 app.use("/api/rejections/",rejectionsRoutes)

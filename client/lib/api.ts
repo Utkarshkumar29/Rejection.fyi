@@ -5,7 +5,7 @@ const fetchApi = async (url:string, options: RequestInit = {}) => {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
-
+console.log('API Response:', `${process.env.NEXT_PUBLIC_API_URL}${url}`,"paper");
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/${url}`,
     {
@@ -13,7 +13,7 @@ const fetchApi = async (url:string, options: RequestInit = {}) => {
       headers,
     }
   );
-
+  
   if (!response.ok) {
     throw new Error(`API Error: ${response.status}`);
   }
