@@ -20,7 +20,7 @@ const LoginPage = () => {
         setError("")
         setIsLoading(true)
         try {
-            const response = await fetchApi("/user/login", {
+            const response = await fetchApi("user/login", {
                 method: "POST",
                 body: JSON.stringify({ gmail: email, password })
             })

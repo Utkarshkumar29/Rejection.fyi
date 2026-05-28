@@ -38,7 +38,7 @@ const RegisterPage = () => {
         setIsLoading(true)
         try {
             const anonToken = typeof window !== 'undefined' ? localStorage.getItem("anonToken") : null
-            const response = await fetchApi("/user/signUp", {
+            const response = await fetchApi("user/signUp", {
                 method: "POST",
                 body: JSON.stringify({ username, gmail: email, password, anonToken })
             })
