@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import fetchApi from "@/lib/api"
+import Link from "next/dist/client/link"
 
 const LoginPage = () => {
     const router = useRouter()
@@ -25,7 +26,7 @@ const LoginPage = () => {
                 body: JSON.stringify({ gmail: email, password })
             })
             localStorage.setItem("token", response.token)
-            router.push("/")
+            router.push("/rejections")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Invalid credentials. Please try again.")
         } finally {
@@ -49,6 +50,7 @@ const LoginPage = () => {
                 />
 
                 <div className="relative z-10">
+                    <Link href="/" className="flex items-center gap-3 mb-16">
                     <div className="flex items-center gap-3 mb-16">
                         <div className="w-8 h-8 flex items-center justify-center rounded"
                             style={{ background: 'var(--accent-red)' }}>
@@ -56,6 +58,7 @@ const LoginPage = () => {
                         </div>
                         <span className="text-white font-semibold text-lg tracking-tight">rejected.fyi</span>
                     </div>
+                    </Link>
 
                     <div className="mb-12">
                         <h2 className="text-3xl font-bold text-white leading-tight mb-4">

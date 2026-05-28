@@ -44,7 +44,7 @@ const RegisterPage = () => {
             })
             localStorage.setItem("token", response.token)
             if (anonToken) localStorage.removeItem("anonToken")
-            router.push("/")
+            router.push("/rejections")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
         } finally {

@@ -64,10 +64,24 @@ export default function CompanyProfile() {
         } catch (error) { console.log(error) }
     }
 
+    const getCompanyMessages = async () => {
+        try {
+            const response = await fetchApi(`company/${slug}/messages`, { method: "GET" })
+            setMessages(response.messages || [])
+        } catch (error) { console.log(error) }
+    }
+
     useEffect(() => {
         Promise.all([getCompany(), getCompanyInsights(), getCompanyTrends()])
             .finally(() => setLoading(false))
     }, [])
+
+    // Load existing messages when discussion tab is opened
+    useEffect(() => {
+        if (activeTab === "discussion") {
+            getCompanyMessages()
+        }
+    }, [activeTab])
 
     // Socket.io discussion room
     useEffect(() => {
@@ -81,7 +95,11 @@ export default function CompanyProfile() {
         })
 
         socket.on("newMessage", (msg: Message) => {
-            setMessages(prev => [...prev, msg])
+            setMessages(prev => {
+                // Avoid adding duplicate messages
+                const isDuplicate = prev.some(m => m._id === msg._id)
+                return isDuplicate ? prev : [...prev, msg]
+            })
         })
 
         socket.on("disconnect", () => setSocketConnected(false))
@@ -141,7 +159,7 @@ export default function CompanyProfile() {
             <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }} className="flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-white font-semibold mb-2">Company not found</p>
-                    <button onClick={() => router.push("/")} className="text-sm cursor-pointer"
+                    <button onClick={() => router.push("/rejections")} className="text-sm cursor-pointer"
                         style={{ color: 'var(--accent-red)' }}>← Back to feed</button>
                 </div>
             </div>
@@ -245,7 +263,7 @@ export default function CompanyProfile() {
                     style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
                     {(['overview', 'discussion'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
-                            className="px-5 py-2 rounded-md text-sm font-medium transition-all capitalize"
+                            className="px-5 py-2 rounded-md text-sm font-medium transition-all capitalize cursor-pointer"
                             style={{
                                 background: activeTab === tab ? 'var(--bg-card)' : 'transparent',
                                 color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-secondary)',
@@ -397,7 +415,7 @@ export default function CompanyProfile() {
 
                         {/* Message input */}
                         <div className="px-6 py-4" style={{ borderTop: '1px solid var(--border)' }}>
-                            <div className="flex items-end gap-3">
+                            <div className="flex items-center gap-3">
                                 <textarea
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}

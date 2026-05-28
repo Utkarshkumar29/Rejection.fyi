@@ -267,12 +267,20 @@ const FeedPage = () => {
                                         </button>
                                     </div>
                                 ) : (
-                                    filteredRejections.map((item) => (
+                                    filteredRejections.map((item) => {
+                                        const companySlug = `company-${item.companyName
+                                            .toLowerCase()
+                                            .trim()
+                                            .replace(/[^a-z0-9\s-]/g, "")
+                                            .replace(/\s+/g, "-")}`
+                                        return (
                                         <div key={item._id}
                                             className="rounded-xl p-5 transition-all duration-200 cursor-pointer group"
                                             style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
                                             onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-light)'}
-                                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}>
+                                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                                            onClick={() => router.push(`/company/${companySlug}`)}
+                                        >
 
                                             {/* Header */}
                                             <div className="flex items-start justify-between gap-4 mb-3">
@@ -284,7 +292,7 @@ const FeedPage = () => {
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="font-semibold text-white">{item.companyName}</span>
+                                                            <span className="font-semibold text-white hover:opacity-80 transition-opacity" style={{ cursor: 'pointer' }}>{item.companyName}</span>
                                                             <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>·</span>
                                                             <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item.role}</span>
                                                         </div>
@@ -347,7 +355,7 @@ const FeedPage = () => {
                                                 </div>
                                             )}
                                         </div>
-                                    ))
+                                    )})
                                 )}
 
                                 {/* Pagination */}

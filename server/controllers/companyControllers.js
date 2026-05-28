@@ -1,5 +1,6 @@
 const Company = require("../models/companyModel")
 const Rejection = require("../models/rejectionModel")
+const Message = require("../models/messageModel")
 const {GoogleGenerativeAI}=require("@google/generative-ai")
 
 const getCompany=async(req,res)=>{
@@ -81,4 +82,28 @@ const getCompanyTrends=async(req,res)=>{
     }
 }
 
-module.exports={getCompany,getCompanyInsights,getCompanyTrends}
+const getCompanyMessages = async (req, res) => {
+    try {
+        const { slug } = req.params
+        const company = await Company.findOne({ slug })
+        if (!company) {
+            return res.status(404).send({
+                message: "Company doesn't exist"
+            })
+        }
+        const messages = await Message.find({ company: company._id })
+            .populate('user', 'username gmail')
+            .sort({ createdAt: 1 })
+            .limit(100)
+        res.status(200).send({
+            messages
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            message: "Internal Server Error"
+        })
+    }
+}
+
+module.exports={getCompany,getCompanyInsights,getCompanyTrends,getCompanyMessages}
