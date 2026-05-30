@@ -82,7 +82,7 @@ export default function CompanyProfile() {
     // Load existing messages when discussion tab is opened
     useEffect(() => {
         if (activeTab === "discussion") {
-            getMessages()
+            getMessages(company?._id)
         }
     }, [activeTab])
 
