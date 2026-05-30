@@ -9,6 +9,7 @@ const rejectionsRoutes = require('./routes/rejectionRoutes');
 const { Server } = require("socket.io");
 const setupSocket = require('./config/socket')
 const companyRoutes = require("./routes/companyRoutes")
+const messageRoutes = require("./routes/messageRoutes")
 const cors = require("cors");
 
 require("dotenv").config();
@@ -25,6 +26,7 @@ app.use(cors({
 app.use("/api/user/", userRoutes)
 app.use("/api/rejections/", rejectionsRoutes)
 app.use("/api/company", companyRoutes)
+app.use("/api/messages", messageRoutes)
 
 app.get("/health", (req, res) => {
   res.json({

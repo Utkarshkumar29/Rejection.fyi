@@ -42,6 +42,7 @@ export default function CompanyProfile() {
     const [socketConnected, setSocketConnected] = useState(false)
     const socketRef = useRef<Socket | null>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
+    const [messagesLoaded, setMessagesLoaded] = useState(false)
 
     const getCompany = async () => {
         try {
@@ -62,6 +63,15 @@ export default function CompanyProfile() {
             const response = await fetchApi(`company/${slug}/trends`, { method: "GET" })
             setTrends(response.text)
         } catch (error) { console.log(error) }
+    }
+
+    const getMessages = async (companyId: string) => {
+        try {
+            const response = await fetchApi(`messages/${companyId}`, { method: "GET" })
+            if (response.messages) {
+                setMessages(response.messages)
+            }
+        } catch (error) { console.log("Failed to load messages:", error) }
     }
 
     useEffect(() => {
@@ -89,6 +99,14 @@ export default function CompanyProfile() {
         return () => { socket.disconnect() }
     }, [slug])
 
+    // Load messages when discussion tab is active
+    useEffect(() => {
+        if (activeTab === "discussion" && company?._id && !messagesLoaded) {
+            getMessages(company._id)
+            setMessagesLoaded(true)
+        }
+    }, [activeTab, company, messagesLoaded])
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
@@ -96,11 +114,13 @@ export default function CompanyProfile() {
     const sendMessage = () => {
         if (!newMessage.trim() || !socketRef.current) return
         const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null
+        
+        // Only send user info if logged in (token will be verified server-side)
         socketRef.current.emit("sendMessage", {
             message: newMessage.trim(),
             slug,
             company: { _id: company?._id },
-            user: token ? { _id: "me" } : null
+            user: token ? { _id: token } : null  // Send null for anonymous users
         })
         setNewMessage("")
     }
